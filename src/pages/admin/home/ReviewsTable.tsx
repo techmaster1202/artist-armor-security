@@ -102,6 +102,7 @@ const ReviewsTable: React.FC<ReviewsTableProps> = ({ data }) => {
     if (sortType === "rating") sortId = "rating";
     else if (sortType === "abc") sortId = "customerName";
     else if (sortType === "123") sortId = "id";
+    else if (sortType === "tags") sortId = "tags";  
 
     if (sortId) {
       setSorting([{ id: sortId, desc: newDirection === "desc" }]);
@@ -153,15 +154,15 @@ const ReviewsTable: React.FC<ReviewsTableProps> = ({ data }) => {
             <Button
               variant="default"
               size="sm"
-              className="h-8 w-28 gap-2 rounded-xl"
+              className="h-10 w-28 gap-2 rounded-xl"
             >
               <Filter className="h-4 w-4" /> Filter
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             side="left"
-            align="start"
-            className="bg-gray-200 rounded-xl p-2 shadow-md flex gap-3"
+            align="center"
+            className="bg-gray-200 rounded-xl px-2 py-1 shadow-md flex gap-3"
           >
             <DropdownMenuItem
               onClick={(e) => {
@@ -170,8 +171,8 @@ const ReviewsTable: React.FC<ReviewsTableProps> = ({ data }) => {
               }}
               className={`${
                 sorting.some((s) => s.id === "rating")
-                  ? "bg-gray-300 font-semibold"
-                  : ""
+                  ? "bg-gray-300 font-bold text-black"
+                  : "text-white"
               }`}
             >
               No. Rating + | -
@@ -183,8 +184,8 @@ const ReviewsTable: React.FC<ReviewsTableProps> = ({ data }) => {
               }}
               className={`${
                 sorting.some((s) => s.id === "customerName")
-                  ? "bg-gray-300 font-semibold"
-                  : ""
+                  ? "bg-gray-300 font-bold text-black"
+                  : "text-white"
               }`}
             >
               ABC
@@ -196,25 +197,31 @@ const ReviewsTable: React.FC<ReviewsTableProps> = ({ data }) => {
               }}
               className={`${
                 sorting.some((s) => s.id === "id")
-                  ? "bg-gray-300 font-semibold"
-                  : ""
+                  ? "bg-gray-300 font-bold text-black"
+                  : "text-white"
               }`}
             >
               #123
             </DropdownMenuItem>
-            <div
+            <DropdownMenuItem
               onClick={(e) => {
                 e.preventDefault();
                 setTagMenuOpen(!tagMenuOpen);
+                handleSortToggle("tags");
               }}
+              // merge this with the other className
               className={`px-3 py-1 text-sm hover:bg-gray-100 rounded-lg cursor-pointer ${
                 selectedTags.length > 0 ? "bg-gray-300" : ""
+              } ${
+                sorting.some((s) => s.id === "tags")
+                  ? "bg-gray-300 font-bold text-black"
+                  : "text-white"
               }`}
             >
               TAG {selectedTags.length > 0 ? `(${selectedTags.length})` : ""}
-            </div>
+            </DropdownMenuItem>
             {tagMenuOpen && (
-              <div className="absolute -top-16 -left-40 bg-gray-200 rounded-xl p-2 flex gap-2">
+              <div className="absolute -top-16 -left-60 bg-gray-200 rounded-xl p-2 flex gap-2">
                 {tags.map((tag) => (
                   <Button
                     key={tag.label}
@@ -239,7 +246,7 @@ const ReviewsTable: React.FC<ReviewsTableProps> = ({ data }) => {
         <Button
           variant="outline"
           size="sm"
-          className="h-8 w-28 gap-2 rounded-xl bg-orange-500 text-white border-0 hover:bg-orange-600 hover:text-white"
+          className="h-10 w-28 gap-2 rounded-xl bg-orange-500 text-white border-0 hover:bg-orange-600 hover:text-white"
           onClick={handleRefresh}
         >
           <RefreshCw className="h-4 w-4" /> Refresh
