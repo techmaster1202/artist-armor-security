@@ -27,14 +27,21 @@ export function PaginationComponent({
 
   const handlePageClick = (page: number) => (e: React.MouseEvent) => {
     e.preventDefault();
-    setActivePage(page);
-    onPageChange(page);
+    if (page >= 1 && page <= totalPages) {
+      setActivePage(page);
+      onPageChange(page);
+    }
   };
 
   // Generate page numbers to display
   const getPageNumbers = () => {
     const pageNumbers = [];
     const maxPagesToShow = 4;
+    
+    // Handle edge cases
+    if (totalPages <= 0) {
+      return [1];
+    }
     
     if (totalPages <= maxPagesToShow) {
       // If total pages is less than or equal to max pages to show, display all pages
@@ -58,17 +65,24 @@ export function PaginationComponent({
       
       // Add middle pages
       for (let i = startPage; i <= endPage; i++) {
-        pageNumbers.push(i);
+        if (i > 1 && i < totalPages) {
+          pageNumbers.push(i);
+        }
       }
       
       // Always include last page if it's not already included
-      if (!pageNumbers.includes(totalPages)) {
+      if (totalPages > 1 && !pageNumbers.includes(totalPages)) {
         pageNumbers.push(totalPages);
       }
     }
     
     return pageNumbers;
   };
+
+  // Don't render pagination if there are no pages or only one page
+  if (totalPages <= 1) {
+    return null;
+  }
 
   return (
     <Pagination>
